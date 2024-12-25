@@ -29,8 +29,6 @@
             width: 100%;
             text-align: center;
             font-weight: bold;
-        }
-        .small-output {
             font-size: 2em;
         }
     </style>
@@ -67,7 +65,6 @@
             </div>
             <button class="btn waves-effect waves-light" type="submit" name="action">Generate Password</button>
         </form>
-        <h4 class="small-output">Output</h4>
         <div id="password-output"></div>
     </div>
 
@@ -80,8 +77,14 @@
         const specialCheckbox = document.getElementById('special');
         const passwordOutput = document.getElementById('password-output');
 
+        generatePassword();
+
         form.addEventListener('submit', (e) => {
             e.preventDefault();
+            generatePassword();
+        });
+
+        function generatePassword() {
             const length = parseInt(lengthInput.value);
             const useUppercase = uppercaseCheckbox.checked;
             const useNumbers = numbersCheckbox.checked;
@@ -105,7 +108,7 @@
             }
 
             passwordOutput.innerText = password;
-        });
+        }
 
         function getRandomChar(str) {
             return str.charAt(Math.floor(Math.random() * str.length));
