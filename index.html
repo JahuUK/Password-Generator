@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 50%;
+        }
+        #password-output {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h4>Password Generator</h4>
+        <form id="password-form">
+            <div class="row">
+                <div class="col s12 m6">
+                    <label for="length">Password Length:</label>
+                    <input id="length" type="number" value="12" min="8" max="128">
+                </div>
+                <div class="col s12 m6">
+                    <p>
+                        <label>
+                            <input type="checkbox" id="uppercase" checked />
+                            <span>Uppercase Letters</span>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            <input type="checkbox" id="numbers" checked />
+                            <span>Numbers</span>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            <input type="checkbox" id="special" checked />
+                            <span>Special Characters</span>
+                        </label>
+                    </p>
+                </div>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit" name="action">Generate Password</button>
+        </form>
+        <div id="password-output"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        const form = document.getElementById('password-form');
+        const lengthInput = document.getElementById('length');
+        const uppercaseCheckbox = document.getElementById('uppercase');
+        const numbersCheckbox = document.getElementById('numbers');
+        const specialCheckbox = document.getElementById('special');
+        const passwordOutput = document.getElementById('password-output');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const length = parseInt(lengthInput.value);
+            const useUppercase = uppercaseCheckbox.checked;
+            const useNumbers = numbersCheckbox.checked;
+            const useSpecial = specialCheckbox.checked;
+
+            let chars = 'abcdefghijklmnopqrstuvwxyz';
+            let password = '';
+
+            if (useUppercase) {
+                chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            }
+            if (useNumbers) {
+                chars += '0123456789';
+            }
+            if (useSpecial) {
+                chars += '!@#$%^&*()_+~`|}{[]:;?><,./-=';
+            }
+
+            for (let i = 0; i < length; i++) {
+                password += getRandomChar(chars);
+            }
+
+            passwordOutput.innerText = password;
+        });
+
+        function getRandomChar(str) {
+            return str.charAt(Math.floor(Math.random() * str.length));
+        }
+    </script>
+</body>
+</html>
