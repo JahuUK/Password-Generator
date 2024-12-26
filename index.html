@@ -31,6 +31,52 @@
             font-weight: bold;
             font-size: 2em;
         }
+        .btn {
+            background-color: #1976d2;
+            color: #fff;
+        }
+        .row {
+            margin-bottom: 20px;
+        }
+        label {
+            margin-bottom: 10px;
+        }
+        #strength-meter {
+            height: 10px;
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 5px;
+        }
+        #strength-meter_weak {
+            height: 10px;
+            width: 100%;
+            background-color: #ff0000;
+            border-radius: 5px;
+        }
+        #strength-meter_medium {
+            height: 10px;
+            width: 100%;
+            background-color: #ffa07a;
+            border-radius: 5px;
+        }
+        #strength-meter_strong {
+            height: 10px;
+            width: 100%;
+            background-color: #32cd32;
+            border-radius: 5px;
+        }
+        #strength-text {
+            font-weight: bold;
+        }
+        .weak {
+            color: #ff0000;
+        }
+        .medium {
+            color: #ffa07a;
+        }
+        .strong {
+            color: #32cd32;
+        }
     </style>
 </head>
 <body>
@@ -64,10 +110,12 @@
                 </div>
             </div>
             <button class="btn waves-effect waves-light" type="submit" name="action">Generate Password</button>
+            <button class="btn waves-effect waves-light" type="button" id="copy-btn">Copy Password</button>
         </form>
         <div id="password-output"></div>
+        <div id="strength-meter"></div>
+        <div id="strength-text"></div>
     </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
         const form = document.getElementById('password-form');
@@ -76,12 +124,19 @@
         const numbersCheckbox = document.getElementById('numbers');
         const specialCheckbox = document.getElementById('special');
         const passwordOutput = document.getElementById('password-output');
+        const copyBtn = document.getElementById('copy-btn');
+        const strengthMeter = document.getElementById('strength-meter');
+        const strengthText = document.getElementById('strength-text');
 
         generatePassword();
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             generatePassword();
+        });
+
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(passwordOutput.textContent);
         });
 
         function generatePassword() {
@@ -108,10 +163,44 @@
             }
 
             passwordOutput.innerText = password;
+            checkStrength(password);
         }
 
         function getRandomChar(str) {
             return str.charAt(Math.floor(Math.random() * str.length));
+        }
+
+        function checkStrength(password) {
+            let strength = 0;
+            if (password.length >= 8) {
+                strength++;
+            }
+            if (/[A-Z]/.test(password)) {
+                strength++;
+            }
+            if (/[a-z]/.test(password)) {
+                strength++;
+            }
+            if (/[0-9]/.test(password)) {
+                strength++;
+            }
+            if (/[^A-Za-z0-9]/.test(password)) {
+                strength++;
+            }
+
+            if (strength === 1) {
+                strengthMeter.className = 'strength-meter_weak';
+                strengthText.className = 'weak';
+                strengthText.innerText = 'Weak';
+            } else if (strength === 2 || strength === 3) {
+                strengthMeter.className = 'strength-meter_medium';
+                strengthText.className = 'medium';
+                strengthText.innerText = 'Medium';
+            } else {
+                strengthMeter.className = 'strength-meter_strong';
+                strengthText.className = 'strong';
+                strengthText.innerText = 'Strong';
+            }
         }
     </script>
 </body>
